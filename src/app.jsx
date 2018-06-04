@@ -7,19 +7,19 @@ import todoList from './todos.json';
 class TodoItem extends Component {
 
 clickHandler = (e) => {
-
+    
 }
   
 render() {
     
   return (
     <React.Fragment>
-      <li className={this.props.checked ? "completed" : ""}>
+      <li className={this.props.completed ? "completed" : ""}>
         <div className="view">
-							<input className="toggle" type="checkbox" checked={this.props.checked} onChange={this.clickHandler}/>
+							<input className="toggle" type="checkbox" onChange={this.clickHandler}/>
 							<label>{this.props.value}</label>
 							<button className="destroy"></button>
-		    </div>
+		</div>
       </li>
     </React.Fragment>
     );
@@ -35,7 +35,7 @@ class TodoList extends Component {
 
       <React.Fragment>
         <ul className="todo-list">
-        {this.props.todos.map( todo => <TodoItem key={todo.id} value={todo.title} checked={todo.completed} /> )}
+        {this.props.todos.map( todo => <TodoItem key={todo.id} value={todo.title} completed={todo.completed} /> )}
         </ul>
       </React.Fragment>
     )
