@@ -16,6 +16,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "main": "index.js",
+  "repository": "git@github.com:jragard/todos-part-2.git",
+  "author": "Ryan <jragard@gmail.com>",
+  "license": "MIT"
 }
-
