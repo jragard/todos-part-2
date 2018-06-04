@@ -6,9 +6,17 @@ import todoList from './todos.json';
 
 class TodoItem extends Component {
 
-clickHandler = (e) => {
     
+clickHandler = (e) => {
+
+    
+
 }
+
+
+
+
+  
   
 render() {
     
@@ -26,8 +34,16 @@ render() {
   }
   }
 
-class TodoList extends Component {
 
+
+
+
+
+
+
+  class TodoList extends Component {
+
+    
  
   render() {
     return (
@@ -43,12 +59,15 @@ class TodoList extends Component {
 
 }
 
+
+
+
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = { todos: todoList, text: ''}
   }
-
 
 
   handleChange = (e) => {
