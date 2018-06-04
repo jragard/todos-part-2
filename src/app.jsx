@@ -6,25 +6,49 @@ import todoList from './todos.json';
 
 class TodoItem extends Component {
 
-    
+
+
 clickHandler = (e) => {
+
+    // function find(element) {
+    //     return element === e.target.id - 1;
+    //   }
+    
+    let newArray;
+    
+    for (let i = 0; i < this.props.todos.length; i++) {
+        if (e.target.id == this.props.todos[i].id) {
+            // console.log(this.props.todos)
+            alert("hey" + this.props.todos[i].id);
+            newArray = this.props.todos.slice();
+            newArray[i].completed =!newArray[i].completed;
+            this.setState( {
+                "completed": !newArray[i].completed
+            })
+
+        }
+    }
+
+    
+
+    console.log(e.target.id)
+    // console.log(todoList[1].id)
+    console.log(this.props.todos[e.target.id - 1].id)
+    console.log(this.props.todos);
+    
+    
 
     
 
 }
 
-
-
-
-  
-  
 render() {
     
   return (
     <React.Fragment>
       <li className={this.props.completed ? "completed" : ""}>
         <div className="view">
-							<input className="toggle" type="checkbox" onChange={this.clickHandler}/>
+							<input id={this.props.index} className="toggle" type="checkbox" onChange={this.clickHandler}/>
 							<label>{this.props.value}</label>
 							<button className="destroy"></button>
 		</div>
@@ -34,14 +58,7 @@ render() {
   }
   }
 
-
-
-
-
-
-
-
-  class TodoList extends Component {
+class TodoList extends Component {
 
     
  
@@ -51,7 +68,7 @@ render() {
 
       <React.Fragment>
         <ul className="todo-list">
-        {this.props.todos.map( todo => <TodoItem key={todo.id} value={todo.title} completed={todo.completed} /> )}
+        {this.props.todos.map( todo => <TodoItem todos={this.props.todos} index={todo.id} key={todo.id} value={todo.title} completed={todo.completed} /> )}
         </ul>
       </React.Fragment>
     )
