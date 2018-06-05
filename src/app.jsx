@@ -45,8 +45,14 @@ class TodoList extends Component {
 class App extends Component {
   constructor(props) {
     super(props);
+    // this.todoCount = this.todoCount.bind(this);
+    
     this.state = { todos: todoList, text: ''}
   }
+
+  
+ 
+  // loops through the todos array, if the checkbox target's id matches a particular element's id, this toggles/updates the "completed" state
 
   clickHandler = (e) => {
 
@@ -77,15 +83,48 @@ class App extends Component {
             destroyArray.splice(i, 1);
         }
   }
-
-  
-
-  this.setState(
+    this.setState(
       {
           todos: destroyArray
       }
   )
 }
+
+destroyAll = (e) => {
+    let destroyCompletedArray = [];
+
+    for (let i = 0; i < this.state.todos.length; i++) {
+
+        if(!this.state.todos[i].completed) {
+            destroyCompletedArray.push(this.state.todos[i])
+        }
+    }
+
+    this.setState(
+        {
+            todos: destroyCompletedArray
+        }
+    )
+}
+
+
+// return this.state.todos.filter(todo => !todo.completed) does the same thing as the below function
+
+ todoCount = () => {
+     const todoArray = [];
+     for (let i = 0; i < this.state.todos.length; i++) {
+        if(!this.state.todos[i].completed) {
+            todoArray.push(this.state.todos[i]);
+        }
+     }
+     return todoArray.length;
+  }
+
+  
+
+
+
+  
 
   handleChange = (e) => {
     this.setState({ text: e.target.value })
@@ -138,8 +177,8 @@ class App extends Component {
         </section>
 
         <footer className="footer">
-          <span className="todo-count"><strong>0</strong> item(s) left</span>
-          <button className="clear-completed">Clear completed</button>
+          <span className="todo-count"><strong>{this.todoCount()}</strong> item(s) left</span>
+          <button onClick={this.destroyAll} className="clear-completed">Clear completed</button>
         </footer>
 
         
