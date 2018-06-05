@@ -6,45 +6,16 @@ import todoList from './todos.json';
 
 class TodoItem extends Component {
 
-    // clickHandler = (e) => {
-
-      
-        
-    //     let newArray;
-        
-    //     for (let i = 0; i < this.props.todos.length; i++) {
-    //         // eslint-disable-next-line
-    //         if (e.target.id == this.props.todos[i].id) {
-                
-    //             // console.log(this.props.todos)
-                
-    //             newArray = this.props.todos.slice();
-    //             newArray[i].completed =!newArray[i].completed;
-    //             this.setState( {
-    //                 "completed": !newArray[i].completed
-    //             })
-    
-    //         }
-    //     }
-    
-        
-    //     console.log(this.props.completed)
-       
-    //     console.log(this.props.todos);
-    
-    // }
-
 render() {
     
   return (
     <React.Fragment>
       <li className={this.props.completed ? "completed" : ""} >
-          
         <div className="view">
                         
-				<input id={this.props.index} className="toggle" type="checkbox" onChange={this.props.clickMethod}/>
-				<label>{this.props.value}</label>
-				<button className="destroy"></button>
+			<input id={this.props.index} className="toggle" type="checkbox" onChange={this.props.clickMethod}/>
+			<label>{this.props.value}</label>
+			<button className="destroy" id={this.props.index} onClick={this.props.destroyMethod}></button>
         
 		</div>
       </li>
@@ -53,27 +24,23 @@ render() {
   }
 }
 
+//////////////////////////////////////////////////////////
+
 class TodoList extends Component {
 
-    
- 
-  render() {
-    return (
+    render() {
+      return (
 
-
-      <React.Fragment>
-        <ul className="todo-list">
-        {this.props.todos.map( todo => <TodoItem todos={this.props.todos} index={todo.id} key={todo.id} value={todo.title} completed={todo.completed} clickMethod={this.props.clickMethod} /> )}
-        </ul>
-      </React.Fragment>
+        <React.Fragment>
+            <ul className="todo-list">
+            {this.props.todos.map( todo => <TodoItem todos={this.props.todos} index={todo.id} key={todo.id} value={todo.title} completed={todo.completed} clickMethod={this.props.clickMethod} destroyMethod={this.props.destroyMethod}/> )}
+            </ul>
+        </React.Fragment>
     )
   }
-
 }
 
-
-
-
+/////////////////////////////////////////////////////////////
 
 class App extends Component {
   constructor(props) {
@@ -97,12 +64,28 @@ class App extends Component {
             })
         }
     }
-
-    // console.log(this.state.completed)
-    console.log(this.state.todos);
-
 }
 
+  destroyMethod = (e) => {
+
+    let destroyArray;
+
+    for (let i = 0; i < this.state.todos.length; i++) {
+        // eslint-disable-next-line 
+        if (e.target.id == this.state.todos[i].id) {
+            destroyArray = this.state.todos.slice();
+            destroyArray.splice(i, 1);
+        }
+  }
+
+  
+
+  this.setState(
+      {
+          todos: destroyArray
+      }
+  )
+}
 
   handleChange = (e) => {
     this.setState({ text: e.target.value })
@@ -129,12 +112,7 @@ class App extends Component {
       
       let inputField = document.getElementById("input");
       inputField.value = "";
-      
-      
-
-
-      
-  }
+}
 
   render() { 
 
@@ -156,7 +134,7 @@ class App extends Component {
           </header>
 
         <section className="main">
-           <TodoList todos={this.state.todos} clickMethod={this.clickHandler} />
+           <TodoList todos={this.state.todos} clickMethod={this.clickHandler} destroyMethod={this.destroyMethod}/>
         </section>
 
         <footer className="footer">
@@ -167,15 +145,8 @@ class App extends Component {
         
         </section>
       </React.Fragment>
-
-
-      
     );
   };
-
-  
-
-
-}
+};
 
 export default App;
