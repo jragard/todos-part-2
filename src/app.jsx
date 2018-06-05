@@ -4,20 +4,20 @@ import todoList from './todos.json';
 
 class TodoItem extends Component {
 
-render() {
-    
-  return (
-    <React.Fragment>
-      <li className={this.props.completed ? "completed" : ""} >
-        <div className="view">
+  render() {
+    const { completed, index, toggleTodo, value, removeItem } = this.props;
+    return (
+      <React.Fragment>
+        <li className={completed ? "completed" : ""} >
+          <div className="view">
                         
-			<input id={this.props.index} className="toggle" type="checkbox" onChange={this.props.clickMethod}/>
-			<label>{this.props.value}</label>
-			<button className="destroy" id={this.props.index} onClick={this.props.destroyMethod}></button>
+			  <input id={index} className="toggle" type="checkbox" onChange={toggleTodo}/>
+			  <label>{value}</label>
+			  <button className="destroy" id={index} onClick={removeItem}></button>
         
-		</div>
-      </li>
-    </React.Fragment>
+	  	    </div>
+        </li>
+      </React.Fragment>
     );
   }
 }
@@ -25,15 +25,16 @@ render() {
 //////////////////////////////////////////////////////////
 
 class TodoList extends Component {
+  
+  render() {
+    const { todos, toggleTodo, removeItem } = this.props;
+    return (
 
-    render() {
-      return (
-
-        <React.Fragment>
-            <ul className="todo-list">
-            {this.props.todos.map( todo => <TodoItem todos={this.props.todos} index={todo.id} key={todo.id} value={todo.title} completed={todo.completed} clickMethod={this.props.clickMethod} destroyMethod={this.props.destroyMethod}/> )}
-            </ul>
-        </React.Fragment>
+      <React.Fragment>
+          <ul className="todo-list">
+          {todos.map( todo => <TodoItem todos={todos} index={todo.id} key={todo.id} value={todo.title} completed={todo.completed} toggleTodo={toggleTodo} removeItem={removeItem}/> )}
+           </ul>
+      </React.Fragment>
     )
   }
 }
@@ -46,11 +47,9 @@ class App extends Component {
     this.state = { todos: todoList, text: ''}
   }
 
+// loops through the todos array, if the checkbox target's id matches a particular element's id, this toggles/updates the "completed" state
 
-
-  // loops through the todos array, if the checkbox target's id matches a particular element's id, this toggles/updates the "completed" state
-
-  clickHandler = (e) => {
+  toggleTodo = (e) => {
     const { todos } = this.state
     
     for (let i = 0; i < todos.length; i++) {
@@ -62,66 +61,69 @@ class App extends Component {
             })
         }
     }
-}
+ }
 
 // removes item from the todo List when user clicks the red X button
 
-  destroyMethod = (e) => {
+  removeItem = (e) => {
     const { todos } = this.state
-    let destroyArray = [];
+    let removedArray = [];
 
     for (let i = 0; i < todos.length; i++) {
         // eslint-disable-next-line 
         if (e.target.id != todos[i].id) {
-            destroyArray.push(todos[i])
+            removedArray.push(todos[i])
         }
   }
     this.setState(
       {
-          todos: destroyArray
+          todos: removedArray
       }
    )
-}
+ }
 
 // removes all todo Items marked as complete when user clicks the "clear completed" button
 
-destroyAll = (e) => {
+  removeAll = (e) => {
     const { todos } = this.state;
     let completedItems = todos.filter(todo => !todo.completed)
     this.setState(
-        {
-            todos: completedItems
-        }
+      {
+        todos: completedItems
+      }
     )
-}
+ }
 
 // changes the "text" state to whatever the user inputs into the field
 
-handleChange = (e) => {
+  handleChange = (e) => {
     this.setState({ text: e.target.value })
   }
 
-  // handles the submit event when user presses enter.  adds user's todo item to state.todos
+// handles the submit event when user presses enter.  updates state to include user's todo item
 
-handleSubmit = (e) => {
+  handleSubmit = (e) => {
+
+    const { todos, text} = this.state;
     e.preventDefault();
-    if (!this.state.text.length) {
+
+    if (!text.length) {
       return;
     }
     
     this.setState(prevState => (
       {
       todos: [...prevState.todos, {"userId": 1,
-                                   "id": this.state.todos.length + 1,
-                                   "title": this.state.text,
+                                   "id": todos.length + 1,
+                                   "title": text,
                                    "completed": false }],
-      text: ''
+      text: ""
       })
     );
       
       let inputField = document.getElementById("input");
       inputField.value = "";
-}
+ }
 
   render() { 
     const { todos } = this.state;
@@ -144,12 +146,12 @@ handleSubmit = (e) => {
           </header>
 
           <section className="main">
-          <TodoList todos={this.state.todos} clickMethod={this.clickHandler} destroyMethod={this.destroyMethod}/>
+          <TodoList todos={todos} toggleTodo={this.toggleTodo} removeItem={this.removeItem}/>
           </section>
 
           <footer className="footer">
             <span className="todo-count"><strong>{todos.filter(todo => !todo.completed).length}</strong> item(s) left</span>
-            <button onClick={this.destroyAll} className="clear-completed">Clear completed</button>
+            <button onClick={this.removeAll} className="clear-completed">Clear completed</button>
           </footer>
 
         
