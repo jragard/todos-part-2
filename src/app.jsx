@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import todoList from './todos.json';
 
-
-
 class TodoItem extends Component {
 
 render() {
@@ -45,23 +43,17 @@ class TodoList extends Component {
 class App extends Component {
   constructor(props) {
     super(props);
-    // this.todoCount = this.todoCount.bind(this);
-    
     this.state = { todos: todoList, text: ''}
   }
 
-  
- 
   // loops through the todos array, if the checkbox target's id matches a particular element's id, this toggles/updates the "completed" state
 
   clickHandler = (e) => {
-
-    let newArray;
+    let newArray = [];
     
     for (let i = 0; i < this.state.todos.length; i++) {
         // eslint-disable-next-line
         if (e.target.id == this.state.todos[i].id) {
-            
             newArray = this.state.todos.slice();
             newArray[i].completed = !newArray[i].completed;
 
@@ -72,29 +64,30 @@ class App extends Component {
     }
 }
 
-  destroyMethod = (e) => {
+// removes item from the todo List when user clicks the red X button
 
-    let destroyArray;
+  destroyMethod = (e) => {
+    let destroyArray = [];
 
     for (let i = 0; i < this.state.todos.length; i++) {
         // eslint-disable-next-line 
-        if (e.target.id == this.state.todos[i].id) {
-            destroyArray = this.state.todos.slice();
-            destroyArray.splice(i, 1);
+        if (e.target.id != this.state.todos[i].id) {
+            destroyArray.push(this.state.todos[i])
         }
   }
     this.setState(
       {
           todos: destroyArray
       }
-  )
+   )
 }
+
+// removes all todo Items marked as complete when user clicks the "clear completed" button
 
 destroyAll = (e) => {
     let destroyCompletedArray = [];
 
     for (let i = 0; i < this.state.todos.length; i++) {
-
         if(!this.state.todos[i].completed) {
             destroyCompletedArray.push(this.state.todos[i])
         }
@@ -110,6 +103,8 @@ destroyAll = (e) => {
 
 // return this.state.todos.filter(todo => !todo.completed) does the same thing as the below function
 
+// displays how many uncompleted items are left on the list
+
  todoCount = () => {
      const todoArray = [];
      for (let i = 0; i < this.state.todos.length; i++) {
@@ -120,15 +115,13 @@ destroyAll = (e) => {
      return todoArray.length;
   }
 
-  
-
-
-
-  
+  // changes the "text" state to whatever the user inputs into the field
 
   handleChange = (e) => {
     this.setState({ text: e.target.value })
   }
+
+  // handles the submit event when user presses enter.  adds user's todo item to state
 
   handleSubmit = (e) => {
     e.preventDefault();
