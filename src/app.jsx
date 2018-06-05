@@ -6,57 +6,52 @@ import todoList from './todos.json';
 
 class TodoItem extends Component {
 
+    // clickHandler = (e) => {
 
-
-clickHandler = (e) => {
-
-    // function find(element) {
-    //     return element === e.target.id - 1;
-    //   }
+      
+        
+    //     let newArray;
+        
+    //     for (let i = 0; i < this.props.todos.length; i++) {
+    //         // eslint-disable-next-line
+    //         if (e.target.id == this.props.todos[i].id) {
+                
+    //             // console.log(this.props.todos)
+                
+    //             newArray = this.props.todos.slice();
+    //             newArray[i].completed =!newArray[i].completed;
+    //             this.setState( {
+    //                 "completed": !newArray[i].completed
+    //             })
     
-    let newArray;
+    //         }
+    //     }
     
-    for (let i = 0; i < this.props.todos.length; i++) {
-        if (e.target.id == this.props.todos[i].id) {
-            // console.log(this.props.todos)
-            alert("hey" + this.props.todos[i].id);
-            newArray = this.props.todos.slice();
-            newArray[i].completed =!newArray[i].completed;
-            this.setState( {
-                "completed": !newArray[i].completed
-            })
-
-        }
-    }
-
+        
+    //     console.log(this.props.completed)
+       
+    //     console.log(this.props.todos);
     
-
-    console.log(e.target.id)
-    // console.log(todoList[1].id)
-    console.log(this.props.todos[e.target.id - 1].id)
-    console.log(this.props.todos);
-    
-    
-
-    
-
-}
+    // }
 
 render() {
     
   return (
     <React.Fragment>
-      <li className={this.props.completed ? "completed" : ""}>
+      <li className={this.props.completed ? "completed" : ""} >
+          
         <div className="view">
-							<input id={this.props.index} className="toggle" type="checkbox" onChange={this.clickHandler}/>
-							<label>{this.props.value}</label>
-							<button className="destroy"></button>
+                        
+				<input id={this.props.index} className="toggle" type="checkbox" onChange={this.props.clickMethod}/>
+				<label>{this.props.value}</label>
+				<button className="destroy"></button>
+        
 		</div>
       </li>
     </React.Fragment>
     );
   }
-  }
+}
 
 class TodoList extends Component {
 
@@ -68,7 +63,7 @@ class TodoList extends Component {
 
       <React.Fragment>
         <ul className="todo-list">
-        {this.props.todos.map( todo => <TodoItem todos={this.props.todos} index={todo.id} key={todo.id} value={todo.title} completed={todo.completed} /> )}
+        {this.props.todos.map( todo => <TodoItem todos={this.props.todos} index={todo.id} key={todo.id} value={todo.title} completed={todo.completed} clickMethod={this.props.clickMethod} /> )}
         </ul>
       </React.Fragment>
     )
@@ -86,10 +81,31 @@ class App extends Component {
     this.state = { todos: todoList, text: ''}
   }
 
+  clickHandler = (e) => {
+
+    let newArray;
+    
+    for (let i = 0; i < this.state.todos.length; i++) {
+        // eslint-disable-next-line
+        if (e.target.id == this.state.todos[i].id) {
+            
+            newArray = this.state.todos.slice();
+            newArray[i].completed = !newArray[i].completed;
+
+            this.setState( {
+                "completed": newArray[i].completed
+            })
+        }
+    }
+
+    // console.log(this.state.completed)
+    console.log(this.state.todos);
+
+}
+
 
   handleChange = (e) => {
     this.setState({ text: e.target.value })
-    console.log(this.state.text);
   }
 
   handleSubmit = (e) => {
@@ -113,7 +129,8 @@ class App extends Component {
       
       let inputField = document.getElementById("input");
       inputField.value = "";
-      console.log(this.state);
+      
+      
 
 
       
@@ -139,7 +156,7 @@ class App extends Component {
           </header>
 
         <section className="main">
-           <TodoList todos={this.state.todos} />
+           <TodoList todos={this.state.todos} clickMethod={this.clickHandler} />
         </section>
 
         <footer className="footer">
