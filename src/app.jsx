@@ -46,19 +46,19 @@ class App extends Component {
     this.state = { todos: todoList, text: ''}
   }
 
+
+
   // loops through the todos array, if the checkbox target's id matches a particular element's id, this toggles/updates the "completed" state
 
   clickHandler = (e) => {
-    let newArray = [];
+    const { todos } = this.state
     
-    for (let i = 0; i < this.state.todos.length; i++) {
+    for (let i = 0; i < todos.length; i++) {
         // eslint-disable-next-line
-        if (e.target.id == this.state.todos[i].id) {
-            newArray = this.state.todos.slice();
-            newArray[i].completed = !newArray[i].completed;
-
+        if (e.target.id == todos[i].id) {
+            todos[i].completed = !todos[i].completed;
             this.setState( {
-                "completed": newArray[i].completed
+                "completed": todos[i].completed
             })
         }
     }
@@ -67,12 +67,13 @@ class App extends Component {
 // removes item from the todo List when user clicks the red X button
 
   destroyMethod = (e) => {
+    const { todos } = this.state
     let destroyArray = [];
 
-    for (let i = 0; i < this.state.todos.length; i++) {
+    for (let i = 0; i < todos.length; i++) {
         // eslint-disable-next-line 
-        if (e.target.id != this.state.todos[i].id) {
-            destroyArray.push(this.state.todos[i])
+        if (e.target.id != todos[i].id) {
+            destroyArray.push(todos[i])
         }
   }
     this.setState(
@@ -85,47 +86,25 @@ class App extends Component {
 // removes all todo Items marked as complete when user clicks the "clear completed" button
 
 destroyAll = (e) => {
-    let destroyCompletedArray = [];
-
-    for (let i = 0; i < this.state.todos.length; i++) {
-        if(!this.state.todos[i].completed) {
-            destroyCompletedArray.push(this.state.todos[i])
-        }
-    }
-
+    const { todos } = this.state;
+    let completedItems = todos.filter(todo => !todo.completed)
     this.setState(
         {
-            todos: destroyCompletedArray
+            todos: completedItems
         }
     )
 }
 
+// changes the "text" state to whatever the user inputs into the field
 
-// return this.state.todos.filter(todo => !todo.completed) does the same thing as the below function
-
-// displays how many uncompleted items are left on the list
-
- todoCount = () => {
-     const todoArray = [];
-     for (let i = 0; i < this.state.todos.length; i++) {
-        if(!this.state.todos[i].completed) {
-            todoArray.push(this.state.todos[i]);
-        }
-     }
-     return todoArray.length;
-  }
-
-  // changes the "text" state to whatever the user inputs into the field
-
-  handleChange = (e) => {
+handleChange = (e) => {
     this.setState({ text: e.target.value })
   }
 
-  // handles the submit event when user presses enter.  adds user's todo item to state
+  // handles the submit event when user presses enter.  adds user's todo item to state.todos
 
-  handleSubmit = (e) => {
+handleSubmit = (e) => {
     e.preventDefault();
-
     if (!this.state.text.length) {
       return;
     }
@@ -137,9 +116,7 @@ destroyAll = (e) => {
                                    "title": this.state.text,
                                    "completed": false }],
       text: ''
-      }
-     
-      )
+      })
     );
       
       let inputField = document.getElementById("input");
@@ -147,9 +124,10 @@ destroyAll = (e) => {
 }
 
   render() { 
-
+    const { todos } = this.state;
     return (
       <React.Fragment>
+
         <section className="todoapp">
         
           <header className="header">
@@ -165,17 +143,18 @@ destroyAll = (e) => {
             </form>
           </header>
 
-        <section className="main">
-           <TodoList todos={this.state.todos} clickMethod={this.clickHandler} destroyMethod={this.destroyMethod}/>
-        </section>
+          <section className="main">
+          <TodoList todos={this.state.todos} clickMethod={this.clickHandler} destroyMethod={this.destroyMethod}/>
+          </section>
 
-        <footer className="footer">
-          <span className="todo-count"><strong>{this.todoCount()}</strong> item(s) left</span>
-          <button onClick={this.destroyAll} className="clear-completed">Clear completed</button>
-        </footer>
+          <footer className="footer">
+            <span className="todo-count"><strong>{todos.filter(todo => !todo.completed).length}</strong> item(s) left</span>
+            <button onClick={this.destroyAll} className="clear-completed">Clear completed</button>
+          </footer>
 
         
         </section>
+
       </React.Fragment>
     );
   };
